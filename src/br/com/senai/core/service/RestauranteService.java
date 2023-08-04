@@ -2,6 +2,7 @@ package br.com.senai.core.service;
 
 import java.util.List;
 
+import br.com.senai.core.dao.DaoHorario;
 import br.com.senai.core.dao.DaoRestaurante;
 import br.com.senai.core.dao.FactoryDao;
 import br.com.senai.core.domain.Categoria;
@@ -11,8 +12,11 @@ public class RestauranteService {
 	
 	private DaoRestaurante dao;
 	
+	private DaoHorario daoHorario;
+	
 	public RestauranteService(){
 		this.dao = FactoryDao.getInstance().getDaoRestaurante();
+		this.daoHorario = FactoryDao.getInstance().getDaoHorario();
 	}
 
 	public void salvar(Restaurante restaurante) {
@@ -29,6 +33,15 @@ public class RestauranteService {
 	
 	public void removerPor(int id) {
 		if(id > 0) {
+			
+			int qtdeDeHorarios = daoHorario.contarPor(id);
+			
+			boolean isExisteHorarioVinculado = qtdeDeHorarios > 0;
+			
+			if (isExisteHorarioVinculado) {
+				throw new IllegalArgumentException("Não foi possivel excluir o restaurante. Motivo: Existem " + qtdeDeHorarios + " horarios vinculados ao restaurante.");
+			}
+			
 			this.dao.excluirPor(id);
 			
 		}else {
