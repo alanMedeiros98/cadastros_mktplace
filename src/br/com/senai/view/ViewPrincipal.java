@@ -10,6 +10,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import br.com.senai.view.categoria.ViewCadastroCategoria;
+import br.com.senai.view.categoria.ViewListagemCategoria;
+import br.com.senai.view.horario.ViewConfHorario;
+import br.com.senai.view.restaurante.ViewCadastroRestaurante;
+import br.com.senai.view.restaurante.ViewListagemRestaurante;
+
 public class ViewPrincipal extends JFrame {
 
 	
@@ -18,6 +24,7 @@ public class ViewPrincipal extends JFrame {
 
 	
 	public ViewPrincipal() {
+		setResizable(false);
 		setTitle("Tela Principal");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 584, 367);

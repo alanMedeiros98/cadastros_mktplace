@@ -1,4 +1,4 @@
-package br.com.senai.view;
+package br.com.senai.view.categoria;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,6 +25,7 @@ public class ViewCadastroCategoria extends JFrame {
 
 	
 	public ViewCadastroCategoria() {
+		setResizable(false);
 		setTitle("Gerenciar Categoria - Cadastro");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 156);
@@ -63,6 +64,7 @@ public class ViewCadastroCategoria extends JFrame {
 				int opcao = JOptionPane.showConfirmDialog(contentPane, "Deseja realmente cancelar a operação?");
 				if (opcao == 0) {
 					edtNome.setText("");
+					categoria = null;
 				}
 				
 			}
@@ -82,8 +84,8 @@ public class ViewCadastroCategoria extends JFrame {
 						categoria = new Categoria(nome);
 						service.salvar(categoria);
 						JOptionPane.showMessageDialog(contentPane, "Categoria cadastrada com sucesso!");
-						categoria = null;
 						edtNome.setText("");
+						categoria = null;
 					} else {
 						categoria.setNome(nome);
 						service.salvar(categoria);

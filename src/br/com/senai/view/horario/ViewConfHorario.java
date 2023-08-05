@@ -1,4 +1,4 @@
-package br.com.senai.view;
+package br.com.senai.view.horario;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -22,6 +22,7 @@ public class ViewConfHorario extends JFrame {
 	private JComboBox<Restaurante> cbRestaurante;
 
 	public ViewConfHorario() {
+		setResizable(false);
 		setTitle("Gerenciar Horários - Cadastro");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 666, 435);

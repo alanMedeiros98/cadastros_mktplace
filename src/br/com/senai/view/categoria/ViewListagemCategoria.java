@@ -1,4 +1,4 @@
-package br.com.senai.view;
+package br.com.senai.view.categoria;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,6 +31,7 @@ public class ViewListagemCategoria extends JFrame {
 
 	
 	public ViewListagemCategoria() {
+		setResizable(false);
 		CategoriaTableModel model = new CategoriaTableModel(new ArrayList<Categoria>());
 		this.tableCategorias = new JTable(model);
 		tableCategorias.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -70,6 +71,7 @@ public class ViewListagemCategoria extends JFrame {
 					} else {
 						CategoriaTableModel model = new CategoriaTableModel(categoriaEncontrado);
 						tableCategorias.setModel(model);
+						configurarTabela();
 					}
 					
 				} catch (Exception e2) {
@@ -114,7 +116,7 @@ public class ViewListagemCategoria extends JFrame {
 				CategoriaTableModel model = (CategoriaTableModel) tableCategorias.getModel();
 				boolean isLinhaOK = linhaSelecionada >= 0 && !model.isVazio();
 				if (isLinhaOK) {
-					int opcao = JOptionPane.showConfirmDialog(contentPane, "Deseja realmente excluir essa opção?", "Remoção!", JOptionPane.YES_NO_OPTION);
+					int opcao = JOptionPane.showConfirmDialog(contentPane, "Deseja realmente excluir essa opção?", "Exclusão", JOptionPane.YES_NO_OPTION);
 					
 					if (opcao == 0) {
 						Categoria categoriaSelecionada = model.getPor(linhaSelecionada);
@@ -122,9 +124,10 @@ public class ViewListagemCategoria extends JFrame {
 							service.removerPor(categoriaSelecionada.getId());
 							model.removerPor(linhaSelecionada);
 							tableCategorias.updateUI();
+							linhaSelecionada = -1;
 							JOptionPane.showMessageDialog(contentPane, "Categoria removida com sucesso!!");
-						} catch (Exception e2) {
-							JOptionPane.showMessageDialog(contentPane, e2.getMessage());
+						} catch (Exception erro) {
+							JOptionPane.showMessageDialog(contentPane, erro.getMessage());
 						}
 					}
 				} else {
@@ -156,10 +159,23 @@ public class ViewListagemCategoria extends JFrame {
 			}
 		});
 		btnEditar.setBounds(362, 328, 98, 26);
-		contentPane.add(btnEditar);
-		
-		
+		contentPane.add(btnEditar);	
 		
 		setLocationRelativeTo(null);
 	}
+	
+	public void configurarColuna(int indice, int largura) {
+		this.tableCategorias.getColumnModel().getColumn(indice).setResizable(false);
+		this.tableCategorias.getColumnModel().getColumn(indice).setPreferredWidth(largura);
+	}
+	
+	public void configurarTabela() {
+		final int COLUNA_ID = 0;
+		final int COLUNA_NOME = 1;
+		this.tableCategorias.getTableHeader().setReorderingAllowed(false);
+		this.tableCategorias.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.configurarColuna(COLUNA_ID, 5);
+		this.configurarColuna(COLUNA_NOME, 250);
+	}
+	
 }

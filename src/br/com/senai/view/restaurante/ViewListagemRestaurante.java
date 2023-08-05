@@ -1,4 +1,4 @@
-package br.com.senai.view;
+package br.com.senai.view.restaurante;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,6 +42,7 @@ public class ViewListagemRestaurante extends JFrame {
 	}
 
 	public ViewListagemRestaurante() {
+		setResizable(false);
 		this.service = new RestauranteService();
 		RestauranteTableModel model = new RestauranteTableModel(new ArrayList<Restaurante>());
 		this.tableRestaurante = new JTable(model);

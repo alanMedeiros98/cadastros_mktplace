@@ -10,7 +10,8 @@ public class CategoriaTableModel extends AbstractTableModel{
 
 	private static final long serialVersionUID = 1L;
 
-private List<Categoria> categorias;
+	private final int NUM_COL = 2;
+	private List<Categoria> categorias;
 	
 	public CategoriaTableModel(List<Categoria> categorias) {
 		this.categorias = categorias;
@@ -37,7 +38,7 @@ private List<Categoria> categorias;
 
 	@Override
 	public int getColumnCount() {
-		return 2;
+		return NUM_COL;
 	}
 
 	@Override

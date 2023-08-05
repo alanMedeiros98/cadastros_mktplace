@@ -1,4 +1,4 @@
-package br.com.senai.view;
+package br.com.senai.view.restaurante;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,6 +45,7 @@ public class ViewCadastroRestaurante extends JFrame {
 
 	
 	public ViewCadastroRestaurante() {
+		setResizable(false);
 		setTitle("Gerenciar Restaurante - Cadastro");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 620, 370);
