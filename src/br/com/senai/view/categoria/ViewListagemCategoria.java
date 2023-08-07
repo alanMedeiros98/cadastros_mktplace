@@ -129,6 +129,7 @@ public class ViewListagemCategoria extends JFrame {
 						} catch (Exception erro) {
 							JOptionPane.showMessageDialog(contentPane, erro.getMessage());
 						}
+						tableCategorias.clearSelection();
 					}
 				} else {
 					JOptionPane.showMessageDialog(contentPane, "Selecione uma linha para excluir!");
