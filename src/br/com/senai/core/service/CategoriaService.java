@@ -34,7 +34,7 @@ public class CategoriaService {
 		if(id > 0) {
 			int qtdeDeRestaurantes = daoRestaurante.contarPor(id);
 			if (qtdeDeRestaurantes > 0) {
-				throw new IllegalArgumentException("Não foi possivel excluir a categoria, Motivo: Existe(m) " + qtdeDeRestaurantes + "vinculados a categoria.");
+				throw new IllegalArgumentException("Não foi possivel excluir a categoria, Motivo: Existe(m) " + qtdeDeRestaurantes + " restaurantes vinculados a categoria.");
 			}
 			this.dao.excluirPor(id);
 			

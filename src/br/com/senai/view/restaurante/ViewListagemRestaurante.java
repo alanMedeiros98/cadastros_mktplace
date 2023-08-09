@@ -84,6 +84,7 @@ public class ViewListagemRestaurante extends JFrame {
 					} else {
 						RestauranteTableModel model = new RestauranteTableModel(restauranteEncontrado);
 						tableRestaurante.setModel(model);
+						configurarTabela();
 					}
 					
 				} catch (Exception e2) {
@@ -183,4 +184,19 @@ public class ViewListagemRestaurante extends JFrame {
 		setLocationRelativeTo(null);
 		this.carregarComboCategoria();
 	}
+	
+	public void configurarColuna(int indice, int largura) {
+		this.tableRestaurante.getColumnModel().getColumn(indice).setResizable(false);
+		this.tableRestaurante.getColumnModel().getColumn(indice).setPreferredWidth(largura);
+	}
+	
+	public void configurarTabela() {
+		final int COLUNA_ID = 0;
+		final int COLUNA_NOME = 1;
+		this.tableRestaurante.getTableHeader().setReorderingAllowed(false);
+		this.tableRestaurante.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.configurarColuna(COLUNA_ID, 5);
+		this.configurarColuna(COLUNA_NOME, 250);
+	}
+	
 }
