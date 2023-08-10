@@ -25,7 +25,24 @@ public class DaoPostgresHorario implements DaoHorario {
 	
 	@Override
 	public void inserir(Horario horario) {
+		PreparedStatement ps = null;
 		
+		try {
+			
+			ps = conexao.prepareStatement(INSERT);
+			
+			ps.setString(1, horario.getDiaSemana());
+			ps.setTime(2, horario.getHoraAbertura());
+			ps.setTime(2, horario.getHoraFechamento());
+			ps.setInt(4, horario.getRestaurante().getId());
+			
+			ps.execute();
+			
+		} catch (Exception e) {
+			throw new RuntimeException("Ocorreu um erro ao inserir o horario do atendimento. Motivo: " + e.getMessage());
+		} finally {
+			ManagerDb.getInstance().fechar(ps);
+		}
 
 	}
 

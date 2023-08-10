@@ -36,7 +36,7 @@ public class HorarioTableModel extends AbstractTableModel{
 	@Override
 	public int getColumnCount() {
 		return NUM_COL;
-	}
+	} 
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
