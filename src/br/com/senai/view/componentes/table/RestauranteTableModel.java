@@ -25,6 +25,8 @@ public class RestauranteTableModel extends AbstractTableModel{
 			return "Código";
 		} else if (columnIndex == 1) {
 			return "Nome";
+		} else if(columnIndex == 2) {
+			return "Categoria";
 		}
 		throw new IllegalArgumentException("Índice inválido.");
 		
@@ -37,7 +39,7 @@ public class RestauranteTableModel extends AbstractTableModel{
 
 	@Override
 	public int getColumnCount() {
-		return 2;
+		return 3;
 	}
 
 	@Override
@@ -47,6 +49,8 @@ public class RestauranteTableModel extends AbstractTableModel{
 			return restauranteDaLinha.getId();
 		} else if (columnIndex == 1) {
 			return restauranteDaLinha.getNome();
+		} else if(columnIndex == 2) {
+			return restaurantes.get(rowIndex).getCategoria().getNome();
 		}
 		throw new IllegalArgumentException("Índice inválido.");
 	}
