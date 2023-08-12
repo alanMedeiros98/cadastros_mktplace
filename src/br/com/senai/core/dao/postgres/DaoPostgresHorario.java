@@ -31,9 +31,9 @@ public class DaoPostgresHorario implements DaoHorario {
 			
 			ps = conexao.prepareStatement(INSERT);
 			
-			ps.setString(1, horario.getDiaSemana());
+			ps.setString(1, horario.getDiaSemana().name());
 			ps.setTime(2, horario.getHoraAbertura());
-			ps.setTime(2, horario.getHoraFechamento());
+			ps.setTime(3, horario.getHoraFechamento());
 			ps.setInt(4, horario.getRestaurante().getId());
 			
 			ps.execute();

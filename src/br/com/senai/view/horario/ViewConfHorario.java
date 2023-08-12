@@ -1,5 +1,8 @@
 package br.com.senai.view.horario;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -24,7 +27,7 @@ public class ViewConfHorario extends JFrame {
 	private JTextField edtFechamento;
 	private JTable tableHorario;
 	private JComboBox<Restaurante> cbRestaurante;
-	private JComboBox<String> cbDiaSemana;
+	private JComboBox<DiaDaSemana> cbDiaSemana;
 	private RestauranteService service = new RestauranteService();
 	
 	public void carregarComboBox() {
@@ -37,16 +40,17 @@ public class ViewConfHorario extends JFrame {
 	}
 	
 	public void carregarDiaSemana() {
-		
+		List<DiaDaSemana> listaDiaSemana = new ArrayList<>();
 		for (DiaDaSemana diaDaSemana : DiaDaSemana.values()) {
-			cbDiaSemana.addItem(diaDaSemana.getDiaSemana());
+			listaDiaSemana.add(diaDaSemana);
+			cbDiaSemana.addItem(diaDaSemana);
 		}
 	}
 
 	public ViewConfHorario() {
 		setResizable(false);
 		setTitle("Gerenciar Horários - Cadastro");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 682, 435);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -89,6 +93,22 @@ public class ViewConfHorario extends JFrame {
 		contentPane.add(edtFechamento);
 		
 		JButton btnAdicionar = new JButton("Adicionar");
+		btnAdicionar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				try {
+					
+					Restaurante restaurante = (Restaurante) cbRestaurante.getSelectedItem();
+					DiaDaSemana diaSemana =  (DiaDaSemana) cbDiaSemana.getSelectedItem();
+					//String diaSemanaParse = cbDiaSemana.toString(diaSemana);
+					//Time horaAbertura = edtAbertura.get
+					
+				} catch (Exception er) {
+					throw new RuntimeException("Ocorreu um erro ao adicionar um horário ao restaurante. Motivo: " + er.getMessage());
+				}
+				
+			}
+		});
 		btnAdicionar.setBounds(558, 68, 96, 26);
 		contentPane.add(btnAdicionar);
 		

@@ -1,26 +1,25 @@
 package br.com.senai.core.domain;
 
 import java.sql.Time;
-import java.util.Date;
 import java.util.Objects;
 
 public class Horario {
 
 	private int id;
-	private String diaSemana;
+	private DiaDaSemana diaSemana;
 	private Time horaAbertura;
 	private Time horaFechamento;
 	private Restaurante restaurante;
 	
 	
-	public Horario(String diaSemana, Time horaAbertura, Time horaFechamento, Restaurante restaurante) {
+	public Horario(DiaDaSemana diaSemana, Time horaAbertura, Time horaFechamento, Restaurante restaurante) {
 		this.diaSemana = diaSemana;
 		this.horaAbertura = horaAbertura;
 		this.horaFechamento = horaFechamento;
 		this.restaurante = restaurante;
 	}
 
-	public Horario(int id, String diaSemana, Time horaAbertura, Time horaFechamento, Restaurante restaurante) {
+	public Horario(int id, DiaDaSemana diaSemana, Time horaAbertura, Time horaFechamento, Restaurante restaurante) {
 		this(diaSemana, horaAbertura, horaFechamento, restaurante);
 		this.id = id;
 	}
@@ -31,10 +30,10 @@ public class Horario {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getDiaSemana() {
+	public DiaDaSemana getDiaSemana() {
 		return diaSemana;
 	}
-	public void setDiaSemana(String diaSemana) {
+	public void setDiaSemana(DiaDaSemana diaSemana) {
 		this.diaSemana = diaSemana;
 	}
 	public Time getHoraAbertura() {
