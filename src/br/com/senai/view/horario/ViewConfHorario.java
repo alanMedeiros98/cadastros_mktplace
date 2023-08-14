@@ -2,33 +2,44 @@ package br.com.senai.view.horario;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.MaskFormatter;
 
 import br.com.senai.core.domain.DiaDaSemana;
+import br.com.senai.core.domain.Horario;
 import br.com.senai.core.domain.Restaurante;
+import br.com.senai.core.service.HorarioService;
 import br.com.senai.core.service.RestauranteService;
+import br.com.senai.view.componentes.table.HorarioTableModel;
 
 public class ViewConfHorario extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField edtAbertura;
-	private JTextField edtFechamento;
 	private JTable tableHorario;
 	private JComboBox<Restaurante> cbRestaurante;
 	private JComboBox<DiaDaSemana> cbDiaSemana;
 	private RestauranteService service = new RestauranteService();
+	private HorarioService horarioService = new HorarioService();
+	private JFormattedTextField ftfHoraAbertura;
+	private JFormattedTextField ftfHoraFechamento;
+	private Horario horario;
 	
 	public void carregarComboBox() {
 		
@@ -49,6 +60,9 @@ public class ViewConfHorario extends JFrame {
 
 	public ViewConfHorario() {
 		setResizable(false);
+		HorarioTableModel model = new HorarioTableModel(new ArrayList<Horario>());
+		this.tableHorario = new JTable(model);
+		tableHorario.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		setTitle("Gerenciar Horários - Cadastro");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 682, 435);
@@ -63,6 +77,31 @@ public class ViewConfHorario extends JFrame {
 		contentPane.add(lblRestaurante);
 		
 		cbRestaurante = new JComboBox<Restaurante>();
+		cbRestaurante.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				try {
+					
+					
+					Restaurante itemSelecionado = (Restaurante) cbRestaurante.getSelectedItem();
+					int idRest = itemSelecionado.getId();
+					List<Horario> horarioEncontrado = horarioService.listarPor(idRest);
+					boolean isRestauranteOK = horarioEncontrado.isEmpty();
+					if (isRestauranteOK) {
+						JOptionPane.showMessageDialog(contentPane, "Não foi encontrado nenhum restaurante!!");
+					} else {
+						HorarioTableModel model = new HorarioTableModel(horarioEncontrado);
+						tableHorario.setModel(model);
+						tableHorario.updateUI();
+						configurarTabela();
+					}
+					
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(contentPane, e2.getMessage());
+				}
+				
+			}
+		});
 		cbRestaurante.setBounds(100, 32, 554, 25);
 		contentPane.add(cbRestaurante);
 		
@@ -78,19 +117,9 @@ public class ViewConfHorario extends JFrame {
 		lblAbertura.setBounds(227, 69, 56, 16);
 		contentPane.add(lblAbertura);
 		
-		edtAbertura = new JTextField();
-		edtAbertura.setBounds(283, 69, 96, 20);
-		contentPane.add(edtAbertura);
-		edtAbertura.setColumns(10);
-		
 		JLabel lblFechamento = new JLabel("Fechamento");
 		lblFechamento.setBounds(381, 69, 70, 16);
 		contentPane.add(lblFechamento);
-		
-		edtFechamento = new JTextField();
-		edtFechamento.setColumns(10);
-		edtFechamento.setBounds(456, 69, 96, 20);
-		contentPane.add(edtFechamento);
 		
 		JButton btnAdicionar = new JButton("Adicionar");
 		btnAdicionar.addActionListener(new ActionListener() {
@@ -98,10 +127,27 @@ public class ViewConfHorario extends JFrame {
 				
 				try {
 					
+					DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
 					Restaurante restaurante = (Restaurante) cbRestaurante.getSelectedItem();
+					int idRest = restaurante.getId();
 					DiaDaSemana diaSemana =  (DiaDaSemana) cbDiaSemana.getSelectedItem();
-					//String diaSemanaParse = cbDiaSemana.toString(diaSemana);
-					//Time horaAbertura = edtAbertura.get
+					LocalTime horaAbertura = LocalTime.parse(ftfHoraAbertura.getText().formatted(dtf));
+					LocalTime horaFechamento = LocalTime.parse(ftfHoraFechamento.getText().formatted(dtf));
+					
+					if (horario == null) {
+						horario = new Horario(diaSemana, horaAbertura, horaFechamento, idRest);
+						horarioService.salvar(horario);
+						JOptionPane.showMessageDialog(contentPane, "Horario adicionado com sucesso!");
+						horario = null;
+					} else {
+						horario.setDiaSemana(diaSemana);
+						horario.setHoraAbertura(horaAbertura);
+						horario.setHoraFechamento(horaFechamento);
+						horario.setRestaurante(idRest);
+						horarioService.salvar(horario);
+						JOptionPane.showMessageDialog(contentPane, "Horario alterado com sucesso!");
+						horario = null;
+					}
 					
 				} catch (Exception er) {
 					throw new RuntimeException("Ocorreu um erro ao adicionar um horário ao restaurante. Motivo: " + er.getMessage());
@@ -116,18 +162,31 @@ public class ViewConfHorario extends JFrame {
 		lblHorarios.setBounds(12, 123, 56, 16);
 		contentPane.add(lblHorarios);
 		
-		JScrollPane scrollPane = new JScrollPane();
+		JScrollPane scrollPane = new JScrollPane(tableHorario);
 		scrollPane.setBounds(12, 151, 398, 145);
 		contentPane.add(scrollPane);
-		
-		tableHorario = new JTable();
-		scrollPane.setViewportView(tableHorario);
 		
 		JLabel lblAcoes = new JLabel("Ações");
 		lblAcoes.setBounds(428, 151, 36, 16);
 		contentPane.add(lblAcoes);
 		
 		JButton btnEditar = new JButton("Editar");
+		btnEditar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int linhaSelecionada = tableHorario.getSelectedRow();
+				boolean isLinhaOK = linhaSelecionada >= 0;
+				if (isLinhaOK) {
+					HorarioTableModel model = (HorarioTableModel) tableHorario.getModel();
+					Horario horarioSelecionado = model.getPor(linhaSelecionada);
+					setHorario(horarioSelecionado);
+					
+				} else {
+					JOptionPane.showMessageDialog(contentPane, "Selecione uma linha para edição!");
+				}
+				
+			}
+		});
 		btnEditar.setBounds(439, 179, 199, 26);
 		contentPane.add(btnEditar);
 		
@@ -138,9 +197,51 @@ public class ViewConfHorario extends JFrame {
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.setBounds(542, 337, 96, 26);
 		contentPane.add(btnCancelar);
+		
+		ftfHoraAbertura = new JFormattedTextField();
+		ftfHoraAbertura.setBounds(279, 69, 96, 20);
+		contentPane.add(ftfHoraAbertura);
+		
+		ftfHoraFechamento = new JFormattedTextField();
+		ftfHoraFechamento.setBounds(454, 69, 96, 20);
+		contentPane.add(ftfHoraFechamento);
 	
+		try {
+			MaskFormatter mascaraAbertura = new MaskFormatter("##:##:00");
+			MaskFormatter mascaraFechamento = new MaskFormatter("##:##:00");
+			mascaraAbertura.install(ftfHoraAbertura);
+			mascaraFechamento.install(ftfHoraFechamento);
+		} catch (ParseException er) {
+			er.printStackTrace();
+		}
+		
 		setLocationRelativeTo(null);
 		this.carregarComboBox();
 		this.carregarDiaSemana();
+	}
+	
+	public void configurarColuna(int indice, int largura) {
+		this.tableHorario.getColumnModel().getColumn(indice).setResizable(false);
+		this.tableHorario.getColumnModel().getColumn(indice).setPreferredWidth(largura);
+	}
+	
+	public void configurarTabela() {
+		final int COLUNA_DIA_SEMANA = 0;
+		final int COLUNA_ABERTURA = 1;
+		final int COLUNA_FECHAMENTO = 2;
+		this.tableHorario.getTableHeader().setReorderingAllowed(false);
+		this.tableHorario.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.configurarColuna(COLUNA_DIA_SEMANA, 150);
+		this.configurarColuna(COLUNA_ABERTURA, 250);
+		this.configurarColuna(COLUNA_FECHAMENTO, 250);
+	}
+	
+	public void setHorario(Horario horario) {
+		this.horario = horario;
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+		this.cbRestaurante.setSelectedItem(horario.getRestaurante());
+		this.cbDiaSemana.setSelectedItem(horario.getDiaSemana());
+		this.ftfHoraAbertura.setText(String.valueOf(ftfHoraAbertura.getText().formatted(dtf)));
+		this.ftfHoraFechamento.setText(String.valueOf(ftfHoraAbertura.getText().formatted(dtf)));
 	}
 }

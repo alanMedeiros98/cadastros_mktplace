@@ -12,6 +12,9 @@ public class HorarioTableModel extends AbstractTableModel{
 	private final int NUM_COL = 3;
 	
 	private List<Horario> horarios;
+	public HorarioTableModel(List<Horario> horario) {
+		this.horarios = horario;
+	}
 	
 	public Horario getPor(int rowIndex) {
 		return horarios.get(rowIndex);
@@ -22,7 +25,7 @@ public class HorarioTableModel extends AbstractTableModel{
 			return "Dia da Semana";
 		} else if(columnIndex == 1) {
 			return "Abertura";
-		} else if(columnIndex == 3){
+		} else if(columnIndex == 2){
 			return "Fechamento";
 		}
 		throw new IllegalArgumentException("Índice inválido.");
