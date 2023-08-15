@@ -176,8 +176,8 @@ public class ViewConfHorario extends JFrame {
 				
 				int linhaSelecionada = tableHorario.getSelectedRow();
 				boolean isLinhaOK = linhaSelecionada >= 0;
+				HorarioTableModel model = (HorarioTableModel) tableHorario.getModel();
 				if (isLinhaOK) {
-					HorarioTableModel model = (HorarioTableModel) tableHorario.getModel();
 					Horario horarioSelecionado = model.getPor(linhaSelecionada);
 					setHorario(horarioSelecionado);
 					
@@ -191,6 +191,32 @@ public class ViewConfHorario extends JFrame {
 		contentPane.add(btnEditar);
 		
 		JButton btnExcluir = new JButton("Excluir");
+		btnExcluir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int linhaSelecionada = tableHorario.getSelectedRow();
+				HorarioTableModel model = (HorarioTableModel) tableHorario.getModel();
+				boolean isKinhaOk = linhaSelecionada >= 0 && !model.isVazio();
+				if (isKinhaOk) {
+					
+					int confirmExclusao = JOptionPane.showConfirmDialog(contentPane, "Exclusão", "Você realmente deseja excluir o horário selecionado?", JOptionPane.YES_NO_OPTION);
+					Horario horarioSelecionada = model.getPor(linhaSelecionada);
+					try {
+						horarioService.excluir(horarioSelecionada.getId());
+						model.removerPor(linhaSelecionada);
+						JOptionPane.showMessageDialog(contentPane, "Horário removido com sucesso.");
+						tableHorario.updateUI();
+						
+					} catch (Exception e2) {
+						JOptionPane.showMessageDialog(contentPane, e2.getMessage());
+					}
+					
+				} else {
+					JOptionPane.showMessageDialog(contentPane, "Selecione uma linha para remoção.");
+				}
+				
+			}
+		});
 		btnExcluir.setBounds(439, 225, 199, 26);
 		contentPane.add(btnExcluir);
 		
@@ -241,7 +267,9 @@ public class ViewConfHorario extends JFrame {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
 		this.cbRestaurante.setSelectedItem(horario.getRestaurante());
 		this.cbDiaSemana.setSelectedItem(horario.getDiaSemana());
-		this.ftfHoraAbertura.setText(String.valueOf(ftfHoraAbertura.getText().formatted(dtf)));
-		this.ftfHoraFechamento.setText(String.valueOf(ftfHoraAbertura.getText().formatted(dtf)));
+		this.ftfHoraAbertura.setText(horario.getHoraAbertura().toString());
+		this.ftfHoraFechamento.setText(horario.getHoraFechamento().toString());
+		//this.ftfHoraAbertura.setText(String.valueOf(ftfHoraAbertura.getText().formatted(dtf)));
+		//this.ftfHoraFechamento.setText(String.valueOf(ftfHoraAbertura.getText().formatted(dtf)));
 	}
 }

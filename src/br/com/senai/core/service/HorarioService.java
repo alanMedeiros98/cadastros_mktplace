@@ -2,6 +2,8 @@ package br.com.senai.core.service;
 
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import br.com.senai.core.dao.DaoHorario;
 import br.com.senai.core.dao.FactoryDao;
 import br.com.senai.core.domain.Horario;
@@ -28,6 +30,14 @@ public class HorarioService {
 			
 			return dao.listarPorRestaurante(idRestaurante);
 			
+	}
+	
+	public void excluir(int idHorario) {
+		
+		if (idHorario > 0) {
+			this.dao.excluirPor(idHorario);
+		}
+		
 	}
 	
 	public void validar(Horario horario) {

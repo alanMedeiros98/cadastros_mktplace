@@ -87,7 +87,26 @@ public class DaoPostgresHorario implements DaoHorario {
 
 	@Override
 	public void excluirPor(int id) {
+		PreparedStatement ps = null;
 		
+		try {
+			ManagerDb.getInstance().configurarAutocommitDa(conexao, false);
+			
+			ps = conexao.prepareStatement(DELETE);
+			ps.setInt(1, id);
+			boolean isExclusaoOk = ps.executeUpdate() == 1;
+			
+			if(isExclusaoOk) {
+				this.conexao.commit();
+			} else {
+				this.conexao.rollback();
+			}
+			ManagerDb.getInstance().configurarAutocommitDa(conexao, true);
+		} catch (Exception e) {
+			throw new RuntimeException("Ocorreu um erro ao excluir o horário. Motivo: " + e.getMessage());
+		} finally {
+			ManagerDb.getInstance().fechar(ps);
+		}
 
 	}
 
