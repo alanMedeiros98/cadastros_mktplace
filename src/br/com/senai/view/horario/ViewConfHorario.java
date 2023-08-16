@@ -201,14 +201,16 @@ public class ViewConfHorario extends JFrame {
 					
 					int confirmExclusao = JOptionPane.showConfirmDialog(contentPane, "Exclusão", "Você realmente deseja excluir o horário selecionado?", JOptionPane.YES_NO_OPTION);
 					Horario horarioSelecionada = model.getPor(linhaSelecionada);
-					try {
-						horarioService.excluir(horarioSelecionada.getId());
-						model.removerPor(linhaSelecionada);
-						JOptionPane.showMessageDialog(contentPane, "Horário removido com sucesso.");
-						tableHorario.updateUI();
-						
-					} catch (Exception e2) {
-						JOptionPane.showMessageDialog(contentPane, e2.getMessage());
+					if (confirmExclusao == 0) {
+						try {
+							horarioService.excluir(horarioSelecionada.getId());
+							model.removerPor(linhaSelecionada);
+							JOptionPane.showMessageDialog(contentPane, "Horário removido com sucesso.");
+							tableHorario.updateUI();
+							
+						} catch (Exception e2) {
+							JOptionPane.showMessageDialog(contentPane, e2.getMessage());
+						}
 					}
 					
 				} else {

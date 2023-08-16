@@ -98,6 +98,7 @@ public class DaoPostgresHorario implements DaoHorario {
 			
 			if(isExclusaoOk) {
 				this.conexao.commit();
+				System.out.println("chegou no dao");
 			} else {
 				this.conexao.rollback();
 			}

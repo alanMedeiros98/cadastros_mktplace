@@ -34,8 +34,9 @@ public class HorarioService {
 	
 	public void excluir(int idHorario) {
 		
-		if (idHorario > 0) {
+		if (idHorario >= 0) {
 			this.dao.excluirPor(idHorario);
+			System.out.println("chegou");
 		}
 		
 	}
